@@ -1,5 +1,6 @@
 from decimal import Decimal
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -39,6 +40,7 @@ def login_view(request):
         return render(request, "auctions/login.html")
 
 # EFFECTS: logs the user out and renders the default page
+@login_required
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
@@ -73,10 +75,12 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+
 # EFFECTS: if request is POST, load data into CreateListingForm
 #               1. if form is valid, create a new Listing, add it the the database, and redirect to new listing
 #               2. otherwise, reload the same page and notify user that form data was invalid
 #          otherwise, render create listing page for first time viewing
+@login_required
 def createListing(request):
     if request.method == "POST":
         form = CreateListingForm(request.POST)
