@@ -8,11 +8,12 @@ from django.urls import reverse
 from .models import User, Category, Bid, Listing, Comment
 from .forms import CreateListingForm
 
-# EFFECTS: renders page which displays all of the currently active auction listings
+# EFFECTS: render page that displays all of the currently active auction listings
 def index(request):
     return render(request, "auctions/index.html", {
         "listings": Listing.objects.filter(active=True)
     })
+
 
 # EFFECTS: if request is POST, check if a User can be found with the username/password entered
 #               1. if authentication successful, log the user in and redirect them to default page
@@ -96,3 +97,19 @@ def createListing(request):
         return render(request, "auctions/createListing.html", {
             "form": CreateListingForm()
         })
+
+# EFFECTS: render page that displays all of the categories
+def categories(request):
+    return render(request, "auctions/categories.html", {
+        "categories": Category.objects.all()
+    })
+
+# EFFECTS: render page that displays all active auction listings for category
+def category(request, category):
+    categoryObj = Category.objects.get(title=category)
+    listings = categoryObj.listings.all().filter(active=True)
+
+    return render(request, "auctions/index.html", {
+        "category": category,
+        "listings": listings
+    })

@@ -2,7 +2,11 @@
 {% load static %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    {% if category %}
+        <h2>Active Listings: {{ category }}</h2>
+    {% else %}
+        <h2>Active Listings</h2>
+    {% endif %}
 
     <div class="p-1"> 
     {% for listing in listings %}
