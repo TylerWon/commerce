@@ -91,7 +91,6 @@ def createListing(request):
             listing.save()
             form.save_m2m()
 
-            # TODO: redirect to new listing
             return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "auctions/createListing.html", {
@@ -116,4 +115,10 @@ def category(request, category):
     return render(request, "auctions/index.html", {
         "category": category,
         "listings": listings
+    })
+
+# EFFECTS: render page that displays the details of the listing with id
+def listing(request, listingId):
+    return render(request, "auctions/listing.html", {
+        "listing": Listing.objects.get(id=listingId)
     })

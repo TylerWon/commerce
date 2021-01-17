@@ -1,0 +1,18 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+    <h2>Listing: {{ listing.title }}</h2>
+    <div>
+        <div class="mb-4">
+            <img class="w-50 h-auto" src="{{ listing.image }}" alt="display image">
+            <p>{{ listing.description }}</p>
+        </div>
+        <div>
+            {% if listing.bidders.all.count != 0 %}
+                <div class="price">${{ listing.bidders.all.last.amount }}</div>
+            {% else %}
+                <div class="price">${{ listing.startingBid }}</div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
