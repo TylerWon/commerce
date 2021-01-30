@@ -9,37 +9,37 @@
     {% endif %}
 
     <div class="p-1"> 
-    {% for listing in listings %}
-        <div class="container-fluid border mb-3">
-            <div class="row">
-                <div class="col-4 p-2">
-                    {% if listing.image != "" %}
-                        <img class="img-fluid mx-auto d-block" src="{{ listing.image }}" alt="display image">
-                    {% endif %}
-                </div>
-                <div class="col-8 p-2">
-                    <div class="mb-3">
-                        <h4>{{ listing.title }}</h4>
-                    </div>
-                    <div class="mb-3">
-                        <b>Price:</b>
-                        {% if listing.bidders.all.count != 0 %}
-                            ${{ listing.bidders.all.last.amount }}
-                        {% else %}
-                            ${{ listing.startingBid }}
+        {% for listing in listings %}
+            <div class="container-fluid border mb-3">
+                <div class="row">
+                    <div class="col-4 p-2">
+                        {% if listing.image != "" %}
+                            <img class="img-fluid mx-auto d-block" src="{{ listing.image }}" alt="display image">
                         {% endif %}
                     </div>
-                    <div class="mb-3">
-                        {{ listing.description }}
-                    </div>
-                    <div class="text-secondary">
-                        Created {{ listing.date }}
+                    <div class="col-8 p-2">
+                        <div class="botMargin1">
+                            <h4>{{ listing.title }}</h4>
+                        </div>
+                        <div class="botMargin1">
+                            <b>Price:</b>
+                            {% if listing.bidders.all.count != 0 %}
+                                ${{ listing.bidders.all.last.amount }}
+                            {% else %}
+                                ${{ listing.startingBid }}
+                            {% endif %}
+                        </div>
+                        <div class="botMargin1">
+                            {{ listing.description }}
+                        </div>
+                        <div class="text-secondary">
+                            Created {{ listing.date }}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    {% empty %}
-        No active listings.
-    {% endfor %}
+        {% empty %}
+            No active listings.
+        {% endfor %}
     </div>  
 {% endblock %}

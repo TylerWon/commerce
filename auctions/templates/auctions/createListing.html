@@ -4,27 +4,27 @@
     <form action="{% url 'createListing' %}" method="POST">
         {% csrf_token %}
         {{ form.non_field_errors }}
-        <div class="mb-2">
+        <div class="formFieldSpacing">
             <label for="{{ form.title.id_for_label }}">Title: </label>
             {{ form.title }}
             {{ form.title.errors }}
         </div>
-        <div class="mb-2">
+        <div class="formFieldSpacing">
             <label for="{{ form.category.id_for_label }}">Category: </label>
             {{ form.category }}
             {{ form.category.errors }}
         </div>
-        <div class="mb-2">
+        <div class="formFieldSpacing">
             <label for="{{ form.startingBid.id_for_label }}">Starting Bid: $</label>
             {{ form.startingBid }}
             {{ form.startingBid.errors }}
         </div>
-        <div class="mb-2">
+        <div class="formFieldSpacing">
             <label for="{{ form.description.id_for_label }}">Description (optional): </label>
             {{ form.description }}
             {{ form.description.errors }}
         </div>
-        <div class="mb-2">
+        <div class="formFieldSpacing">
             <label for="{{ form.image.id_for_label }}">Image URL (optional): </label>
             {{ form.image }}
             {{ form.image.errors }}

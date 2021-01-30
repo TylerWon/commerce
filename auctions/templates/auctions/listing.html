@@ -7,12 +7,19 @@
             <img class="w-50 h-auto" src="{{ listing.image }}" alt="display image">
             <p>{{ listing.description }}</p>
         </div>
-        <div>
+        <div class="mb-4">
             {% if listing.bidders.all.count != 0 %}
                 <div class="price">${{ listing.bidders.all.last.amount }}</div>
             {% else %}
                 <div class="price">${{ listing.startingBid }}</div>
             {% endif %}
+        </div>
+        <div>
+            <h4>Details</h4>
+            <ul>
+                <li>Listed by: <a href="{% url 'user' listing.lister %}">{{ listing.lister }}</a></li>
+                <li>Category: {{ listing.category }}</li>
+            </ul>
         </div>
     </div>
 {% endblock %}
