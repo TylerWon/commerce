@@ -8,11 +8,25 @@
             <p>{{ listing.description }}</p>
         </div>
         <div class="mb-4">
-            {% if listing.bidders.all.count != 0 %}
-                <div class="price">${{ listing.bidders.all.last.amount }}</div>
-            {% else %}
-                <div class="price">${{ listing.startingBid }}</div>
-            {% endif %}
+            <div class="mb-2">
+                {% if listing.bidders.all.count != 0 %}
+                    <div class="price">${{ listing.bidders.all.last.amount }}</div>
+                {% else %}
+                    <div class="price">${{ listing.startingBid }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <form action="{% url 'bid' listing.id %}" method=POST>
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <div class="formFieldSpacing">
+                        {{ form.amount }}
+                        {{ form.amount.errors }} 
+                    </div>
+                    <input class="btn btn-primary" type="submit" value="Submit">
+                </form>
+            </div>
+            
         </div>
         <div>
             <h4>Details</h4>

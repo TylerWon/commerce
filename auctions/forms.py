@@ -17,8 +17,11 @@ class CreateListingForm(ModelForm):
                 "class": "form-control col-lg-6 col-md-4"
             })
         }
-        error_messages = {
-            "title": {
-                "max_length": _("The title is too long.")
-            },
-        }
+
+# Represents a form which the user can use to bid on a listing
+class BidForm(ModelForm):
+    amount = forms.DecimalField(initial="00.00")
+    
+    class Meta:
+        model = Bid
+        exclude = ["bidder", "listing"]

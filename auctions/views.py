@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from .models import User, Category, Bid, Listing, Comment
-from .forms import CreateListingForm
+from .forms import CreateListingForm, BidForm
 
 # EFFECTS: render page that displays all of the currently active auction listings
 def index(request):
@@ -117,10 +117,11 @@ def category(request, category):
         "listings": listings
     })
 
-# EFFECTS: render page that displays the details of the listing with id
+# EFFECTS: render page that displays the details of the listing that has id = id
 def listing(request, listingId):
     return render(request, "auctions/listing.html", {
-        "listing": Listing.objects.get(id=listingId)
+        "listing": Listing.objects.get(id=listingId),
+        "form": BidForm()
     })
 
 # EFFECTS: render page that displays a user's listings
@@ -132,3 +133,24 @@ def user(request, username):
         "activeListings": user.listings.all().filter(active=True),
         "previousListings": user.listings.all().filter(active=False)
     })
+
+# EFFECTS: if request is POST, load data into BidForm
+#               1. if form is valid, create a new Bid, add it the the database, and redirect to listing bid was made on
+#               2. otherwise, reload the same page and notify user that form data was invalid
+@login_required
+def bid(request, listingId):
+    if request.method == "POST":
+        form = BidForm(request.POST)
+
+        if form.is_valid():
+            bid = form.save(commit=False)
+            bid.bidder = request.user
+            bid.listing = Listing.objects.get(id=listingId)
+            bid.save()
+
+            return HttpResponseRedirect(reverse("listing", args=[listingId]))
+        else:
+            return render(request, "auctions/listing.html", {
+                "listing": Listing.objects.get(id=listingId),
+                "form": form
+            })
