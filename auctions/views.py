@@ -128,7 +128,7 @@ def user(request, username):
     user = User.objects.get(username=username)
 
     return render(request, "auctions/user.html", {
-        "user": user,
+        "username": user.username,
         "activeListings": user.listings.all().filter(active=True),
         "previousListings": user.listings.all().filter(active=False)
     })

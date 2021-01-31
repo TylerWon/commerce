@@ -14,3 +14,7 @@ body {
 .formFieldSpacing {
     margin-bottom: 4px;
 }
+
+.listingSpacing {
+    padding: 4px;
+}
