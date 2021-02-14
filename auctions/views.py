@@ -90,8 +90,9 @@ def createListing(request):
             listing.lister = request.user
             listing.save()
             form.save_m2m()
+            listingId = listing.id
 
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("listing"), args=[listingId])
         else:
             return render(request, "auctions/createListing.html", {
                 "form": form
