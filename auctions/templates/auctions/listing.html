@@ -5,7 +5,7 @@
     <div>
         <div class="mb-4">
             <img class="w-50 h-auto" src="{{ listing.image }}" alt="display image">
-            <p>{{ listing.description }}</p>
+            {{ listing.description }}
         </div>
         <div class="mb-4">
             <div class="mb-2">
@@ -16,17 +16,21 @@
                 {% endif %}
             </div>
             <div>
-                {% if listing.bidss.all.count != 0 and listing.bids.all.last == user %}
-                    <p>{{ listing.bids.all.count }} bid(s) so far. Your bid is the current bid.</p>
+                {% if listing.bidss.all.count != 0 and listing.bids.all.last.bidder.username == user.username %}
+                    <div class="subtext">
+                        {{ listing.bids.all.count }} bid(s) so far. Your bid is the current bid.
+                    </div>
                 {% else %}
-                    <p>{{ listing.bids.all.count }} bid(s) so far.</p>
+                    <div class="subtext">
+                        {{ listing.bids.all.count }} bid(s) so far.
+                    </div>        
                 {% endif %}
             </div>
             <div>            
                 <form action="{% url 'bid' listing.id %}" method=POST>
                     {% csrf_token %}
                     {{ form.non_field_errors }}
-                    <div class="formFieldSpacing">
+                    <div class="mb-3">
                         {{ form.amount }}
                         {{ form.amount.errors }} 
                     </div>

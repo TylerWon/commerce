@@ -19,7 +19,7 @@ class Category(models.Model):
 # Represents data for Listing in the Listing table of the database
 class Listing(models.Model):
     active = models.BooleanField(default=True)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=70)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="listings")
     startingBid = models.DecimalField(max_digits=19, decimal_places=2, validators=[MinValueValidator(limit_value=0)])
     description = models.CharField(max_length=500, blank=True)
