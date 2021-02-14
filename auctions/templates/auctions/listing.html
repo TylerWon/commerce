@@ -9,13 +9,20 @@
         </div>
         <div class="mb-4">
             <div class="mb-2">
-                {% if listing.bidders.all.count != 0 %}
-                    <div class="price">${{ listing.bidders.all.last.amount }}</div>
+                {% if listing.bids.all.count != 0 %}
+                    <div class="price">${{ listing.bids.all.last.amount }}</div>
                 {% else %}
                     <div class="price">${{ listing.startingBid }}</div>
                 {% endif %}
             </div>
             <div>
+                {% if listing.bidss.all.count != 0 and listing.bids.all.last == user %}
+                    <p>{{ listing.bids.all.count }} bid(s) so far. Your bid is the current bid.</p>
+                {% else %}
+                    <p>{{ listing.bids.all.count }} bid(s) so far.</p>
+                {% endif %}
+            </div>
+            <div>            
                 <form action="{% url 'bid' listing.id %}" method=POST>
                     {% csrf_token %}
                     {{ form.non_field_errors }}
@@ -26,7 +33,6 @@
                     <input class="btn btn-primary" type="submit" value="Submit">
                 </form>
             </div>
-            
         </div>
         <div>
             <h4>Details</h4>

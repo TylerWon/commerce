@@ -23,8 +23,8 @@
                         </div>
                         <div class="botMargin1">
                             <b>Price:</b>
-                            {% if listing.bidders.all.count != 0 %}
-                                ${{ listing.bidders.all.last.amount }}
+                            {% if listing.bids.all.count != 0 %}
+                                ${{ listing.bids.all.last.amount }}
                             {% else %}
                                 ${{ listing.startingBid }}
                             {% endif %}
