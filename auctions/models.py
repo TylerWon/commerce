@@ -23,7 +23,7 @@ class Listing(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="listings")
     startingBid = models.DecimalField(max_digits=19, decimal_places=2, validators=[MinValueValidator(limit_value=0)])
     description = models.CharField(max_length=500, blank=True)
-    image = models.URLField(max_length=5000, blank=True)
+    image = models.URLField(max_length=5000)
     lister = models.ForeignKey(User, blank=True, on_delete=models.CASCADE, related_name="listings")
     interestedUsers = models.ManyToManyField(User, blank=True, related_name="watchlist")
     date = models.DateTimeField(auto_now=True)
