@@ -155,3 +155,10 @@ def bid(request, listingId):
                 "listing": Listing.objects.get(id=listingId),
                 "form": form
             })
+
+# EFFECTS: render page that displays the items in the user's watchlist
+@login_required
+def watchlist(request, username):
+    return render(request, "auctions/watchlist.html", {
+        "watchlist": User.objects.get(username=username).watchlist.all()
+    })
