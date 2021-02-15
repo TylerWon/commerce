@@ -10,6 +10,7 @@
 
     <div class="listingSpacing"> 
         {% for listing in listings %}
+        <a class="listingLink" href="{% url 'listing' listing.id %}">
             <div class="container-fluid border mb-3">
                 <div class="row">
                     <div class="col-4 p-2">
@@ -40,6 +41,7 @@
                     </div>
                 </div>
             </div>
+        </a>
         {% empty %}
             No active listings.
         {% endfor %}

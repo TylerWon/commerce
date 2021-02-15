@@ -22,3 +22,12 @@ body {
 .subtext {
     font-size: smaller;
 }
+
+.listingLink {
+    color: black;
+}
+
+.listingLink:hover {
+    text-decoration: none;
+    color: black;
+}
