@@ -7,22 +7,22 @@
     </div>
     {% endfor %}
 
-    <h2>Listing: {{ listing.title }}</h2>
+    <h2 class="mb-2">Listing: {{ listing.title }}</h2>
 
     {% if user.is_authenticated %}
         <form action="{% url 'alterWatchlist' %}" method="POST">
             {% csrf_token %}
-            <input type="hidden" name="listing" value="{{ listing.id }}">
+                <input type="hidden" name="listing" value="{{ listing.id }}">
             {% if inWatchlist %}
-                <input type="submit" name="remove">
+                <input class="btn btn-outline-primary btn-sm" type="submit" name="remove" value="Remove from watchlist"> 
             {% else %}
-                <input type="submit" name="add">
+                <input class="btn btn-outline-primary btn-sm" type="submit" name="add" value="Add to watchlist">              
             {% endif %}
         </form>
     {% endif %}
 
     <div>
-        <div class="mb-4">
+        <div class="my-4">
             <img class="w-50 h-auto" src="{{ listing.image }}">
             <p>{{ listing.description }}</p>
         </div>
@@ -34,28 +34,30 @@
                     <div class="price">${{ listing.startingBid }}</div>
                 {% endif %}
             </div>
-            <div>
-                {% if listing.bidss.all.count != 0 and listing.bids.all.last.bidder.username == user.username %}
-                    <div class="subtext">
-                        {{ listing.bids.all.count }} bid(s) so far. Your bid is the current bid.
-                    </div>
-                {% else %}
-                    <div class="subtext">
-                        {{ listing.bids.all.count }} bid(s) so far.
-                    </div>        
-                {% endif %}
-            </div>
-            <div>            
-                <form action="{% url 'bid' listing.id %}" method=POST>
-                    {% csrf_token %}
-                    {{ form.non_field_errors }}
-                    <div class="mb-3">
-                        {{ form.amount }}
-                        {{ form.amount.errors }} 
-                    </div>
-                    <input class="btn btn-primary" type="submit" value="Place Bid">
-                </form>
-            </div>
+            {% if user.is_authenticated %}
+                <div>
+                    {% if listing.bidss.all.count != 0 and listing.bids.all.last.bidder.username == user.username %}
+                        <div class="subtext">
+                            {{ listing.bids.all.count }} bid(s) so far. Your bid is the current bid.
+                        </div>
+                    {% else %}
+                        <div class="subtext">
+                            {{ listing.bids.all.count }} bid(s) so far.
+                        </div>        
+                    {% endif %}
+                </div>
+                <div>            
+                    <form action="{% url 'bid' listing.id %}" method=POST>
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+                        <div class="mb-3">
+                            {{ form.amount }}
+                            {{ form.amount.errors }} 
+                        </div>
+                        <input class="btn btn-primary" type="submit" value="Place Bid">
+                    </form>
+                </div>
+            {% endif %}
         </div>
         <div>
             <h4>Details</h4>
