@@ -1,7 +1,26 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
+    {% for message in messages %}
+    <div class="alert alert-success" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+
     <h2>Listing: {{ listing.title }}</h2>
+
+    {% if user.is_authenticated %}
+        <form action="{% url 'alterWatchlist' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="listing" value="{{ listing.id }}">
+            {% if inWatchlist %}
+                <input type="submit" name="remove">
+            {% else %}
+                <input type="submit" name="add">
+            {% endif %}
+        </form>
+    {% endif %}
+
     <div>
         <div class="mb-4">
             <img class="w-50 h-auto" src="{{ listing.image }}">

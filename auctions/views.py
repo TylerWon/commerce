@@ -1,4 +1,5 @@
 from decimal import Decimal
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -120,9 +121,22 @@ def category(request, category):
 
 # EFFECTS: render page that displays the details of the listing that has id = id
 def listing(request, listingId):
+    user = request.user
+
+    # determine if listing is in the user's watchlist
+    if user.is_authenticated:
+        try:
+            user.watchlist.all.get(id=listingId)
+            inWatchlist = True
+        except:
+            inWatchlist = False
+    else:
+        inWatchlist = False
+
     return render(request, "auctions/listing.html", {
         "listing": Listing.objects.get(id=listingId),
-        "form": BidForm()
+        "form": BidForm(),
+        "inWatchlist": inWatchlist
     })
 
 # EFFECTS: render page that displays a user's listings
@@ -162,3 +176,28 @@ def watchlist(request, username):
     return render(request, "auctions/watchlist.html", {
         "watchlist": User.objects.get(username=username).watchlist.all()
     })
+
+# EFFECTS: if request is POST:
+#               1. if POST data contains "add", then add listing to user's watchlist
+#               2. otherwise, remove listing from user's watchlist
+@login_required
+def alterWatchlist(request):
+    if request.method == "POST":
+        user = request.user
+        listingId = request.POST["listing"]
+        listing = Listing.objects.get(id=listingId)
+
+        if request.POST["add"]:
+            user.watchlist.add(listing)
+
+            msg = f"Listing: '{ listing.title }' was added to your watchlist."
+            messages.success(request, msg)
+
+            return HttpResponseRedirect(reverse("listing", args=[listing.id]))
+        else:
+            user.watchlist.remove(listing)
+
+            msg = f"Listing: '{ listing.title }' was removed from your watchlist."
+            messages.error(request, msg)
+
+            return HttpResponseRedirect(reverse("listing", args=[listing.id]))
