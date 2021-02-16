@@ -126,13 +126,13 @@ def listing(request, listingId):
     # determine if listing is in the user's watchlist
     if user.is_authenticated:
         try:
-            user.watchlist.all.get(id=listingId)
+            user.watchlist.all().get(id=listingId)
             inWatchlist = True
         except:
             inWatchlist = False
     else:
         inWatchlist = False
-
+        
     return render(request, "auctions/listing.html", {
         "listing": Listing.objects.get(id=listingId),
         "form": BidForm(),
@@ -180,24 +180,24 @@ def watchlist(request, username):
 # EFFECTS: if request is POST:
 #               1. if POST data contains "add", then add listing to user's watchlist
 #               2. otherwise, remove listing from user's watchlist
+#          redirect to listing and display notification that item was either added/removed to user's watchlist
 @login_required
 def alterWatchlist(request):
     if request.method == "POST":
         user = request.user
-        listingId = request.POST["listing"]
+        listingId = int(request.POST["listing"])
         listing = Listing.objects.get(id=listingId)
 
-        if request.POST["add"]:
+        try:
+            request.POST["add"]
             user.watchlist.add(listing)
 
             msg = f"Listing: '{ listing.title }' was added to your watchlist."
             messages.success(request, msg)
-
-            return HttpResponseRedirect(reverse("listing", args=[listing.id]))
-        else:
+        except:
             user.watchlist.remove(listing)
 
             msg = f"Listing: '{ listing.title }' was removed from your watchlist."
             messages.error(request, msg)
-
-            return HttpResponseRedirect(reverse("listing", args=[listing.id]))
+            
+        return HttpResponseRedirect(reverse("listing", args=[listingId]))
