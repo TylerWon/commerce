@@ -7,7 +7,11 @@
     </div>
     {% endfor %}
 
-    <h2 class="mb-2">Listing: {{ listing.title }}</h2>
+    {% if listing.active %}
+        <h2 class="mb-2">Listing: {{ listing.title }}</h2>
+    {% else %}
+        <h2 class="mb-2">Listing: {{ listing.title }} (CLOSED)</h2>
+    {% endif %}
 
     {% if user.is_authenticated %}
         {% if listing.lister != user %}
@@ -23,31 +27,41 @@
         {% endif %}
     {% endif %}
 
-    <div>
-        <div class="my-4">
-            <img class="w-50 h-auto" src="{{ listing.image }}">
-            <p>{{ listing.description }}</p>
+    <div class="my-4">
+        <img class="w-50 h-auto" src="{{ listing.image }}">
+        <p>{{ listing.description }}</p>
+    </div>
+
+    <div class="mb-4">
+        <div class="mb-2">
+            {% if listing.bids.all.count != 0 %}
+                <div class="price">${{ listing.bids.all.last.amount }}</div>
+            {% else %}
+                <div class="price">${{ listing.startingBid }}</div>
+            {% endif %}
         </div>
-        <div class="mb-4">
-            <div class="mb-2">
-                {% if listing.bids.all.count != 0 %}
-                    <div class="price">${{ listing.bids.all.last.amount }}</div>
+        {% if user.is_authenticated %}
+            <div>
+                {% if listing.bids.all.count != 0 and listing.bids.all.last.bidder.username == user.username %}
+                    <div class="subtext">
+                        {{ listing.bids.all.count }} bid(s) so far. Your bid is the current bid.
+                    </div>
                 {% else %}
-                    <div class="price">${{ listing.startingBid }}</div>
+                    <div class="subtext">
+                        {{ listing.bids.all.count }} bid(s) so far.
+                    </div>        
                 {% endif %}
             </div>
-            {% if user.is_authenticated %}
+            {% if listing.lister == user %}
                 <div>
-                    {% if listing.bids.all.count != 0 and listing.bids.all.last.bidder.username == user.username %}
-                        <div class="subtext">
-                            {{ listing.bids.all.count }} bid(s) so far. Your bid is the current bid.
-                        </div>
-                    {% else %}
-                        <div class="subtext">
-                            {{ listing.bids.all.count }} bid(s) so far.
-                        </div>        
-                    {% endif %}
+                    <form action="{% url 'closelisting' listing.id %}" method=POST>
+                        {% csrf_token %}
+                        <div class="mt-1">
+                            <input class="btn btn-primary" type="submit" value="Close listing">
+                        </div>                       
+                    </form>
                 </div>
+            {% else %}
                 <div>            
                     <form action="{% url 'bid' listing.id %}" method=POST>
                         {% csrf_token %}
@@ -60,13 +74,14 @@
                     </form>
                 </div>
             {% endif %}
-        </div>
-        <div>
-            <h4>Details</h4>
-            <ul>
-                <li>Listed by: <a href="{% url 'user' listing.lister %}">{{ listing.lister }}</a></li>
-                <li>Category: {{ listing.category }}</li>
-            </ul>
-        </div>
+        {% endif %}
+    </div>
+
+    <div>
+        <h4>Details</h4>
+        <ul>
+            <li>Listed by: <a href="{% url 'user' listing.lister %}">{{ listing.lister }}</a></li>
+            <li>Category: {{ listing.category }}</li>
+        </ul>
     </div>
 {% endblock %}

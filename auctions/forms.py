@@ -11,7 +11,7 @@ class CreateListingForm(ModelForm):
     
     class Meta:
         model = Listing
-        exclude = ["active", "lister", "interestedUsers", "date"]
+        exclude = ["active", "lister", "interestedUsers", "winner", "date"]
         widgets = {
             "description": Textarea(attrs={
                 "class": "form-control col-lg-6 col-md-4"

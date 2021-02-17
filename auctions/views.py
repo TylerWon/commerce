@@ -91,8 +91,8 @@ def createListing(request):
             listing.lister = request.user
             listing.save()
             form.save_m2m()
-            listingId = listing.id
 
+            listingId = listing.id
             return HttpResponseRedirect(reverse("listing", args=[listingId]))
         else:
             return render(request, "auctions/createListing.html", {
@@ -193,15 +193,30 @@ def alterWatchlist(request, username):
             user.watchlist.add(listing)
 
             msg = f"Listing: '{ listing.title }' was added to your watchlist."
-            messages.success(request, msg)
         except:
             user.watchlist.remove(listing)
 
             msg = f"Listing: '{ listing.title }' was removed from your watchlist."
-            messages.error(request, msg)
             
+        messages.info(request, msg) 
         return HttpResponseRedirect(reverse("listing", args=[listingId]))
 
-# EFFECTS: closes a listing by setting the listing to inactive and making the highest bidder the winner
+# EFFECTS: closes a listing by setting the listing to inactive and making the highest bidder the winner (if there is a bidder)
+@login_required
 def closeListing(request, listingId):
-    pass
+    listing = Listing.objects.get(id=listingId)
+    listing.active = False # might need to save?
+
+    print(listing.active)
+
+    if listing.bids.all().count() == 0:
+        msg = f"Listing: '{ listing.title }' was closed."
+    else:
+        winner = listing.bids.all().last().bidder
+        listing.winner = winner
+        
+        msg = f"Listing: '{ listing.title }' was sold to '{ winner.username }'." 
+    
+    listing.save()
+    messages.info(request, msg)
+    return HttpResponseRedirect(reverse("listing", args=[listingId]))
