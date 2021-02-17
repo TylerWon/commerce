@@ -185,7 +185,7 @@ def watchlist(request, username):
 def alterWatchlist(request, username):
     if request.method == "POST":
         user = request.user
-        listingId = int(request.POST["listing"])
+        listingId = int(request.POST["listingId"])
         listing = Listing.objects.get(id=listingId)
 
         try:
@@ -201,3 +201,7 @@ def alterWatchlist(request, username):
             messages.error(request, msg)
             
         return HttpResponseRedirect(reverse("listing", args=[listingId]))
+
+# EFFECTS: closes a listing by setting the listing to inactive and making the highest bidder the winner
+def closeListing(request, listingId):
+    pass
