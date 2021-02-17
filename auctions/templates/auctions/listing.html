@@ -10,7 +10,7 @@
     <h2 class="mb-2">Listing: {{ listing.title }}</h2>
 
     {% if user.is_authenticated %}
-        <form action="{% url 'alterWatchlist' %}" method="POST">
+        <form action="{% url 'alterWatchlist' user.username %}" method="POST">
             {% csrf_token %}
                 <input type="hidden" name="listing" value="{{ listing.id }}">
             {% if inWatchlist %}

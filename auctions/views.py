@@ -182,7 +182,7 @@ def watchlist(request, username):
 #               2. otherwise, remove listing from user's watchlist
 #          redirect to listing and display notification that item was either added/removed to user's watchlist
 @login_required
-def alterWatchlist(request):
+def alterWatchlist(request, username):
     if request.method == "POST":
         user = request.user
         listingId = int(request.POST["listing"])
