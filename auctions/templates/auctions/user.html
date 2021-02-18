@@ -1,89 +1,87 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
+
     <h2>User: {{ username }}</h2>
-    <div>
-        <div>
-            <h4>Active Listings</h4>
-            <div class="listingSpacing">
-                {% for listing in activeListings %}
-                    <a class="listingLink" href="{% url 'listing' listing.id %}">
-                        <div class="container-fluid border mb-3">
-                            <div class="row">
-                                <div class="col-4 p-2">
-                                    {% if listing.image != "" %}
-                                        <img class="img-fluid mx-auto d-block" src="{{ listing.image }}" alt="display image">
-                                    {% endif %}
-                                </div>
-                                <div class="col-8 p-2">
-                                    <div class="botMargin1">
-                                        <h4>{{ listing.title }}</h4>
-                                    </div>
-                                    <div class="botMargin1">
-                                        <b>Price:</b>
-                                        {% if listing.bids.all.count != 0 %}
-                                            ${{ listing.bids.all.last.amount }}
-                                        {% else %}
-                                            ${{ listing.startingBid }}
-                                        {% endif %}
-                                    </div>
-                                    <div class="botMargin1">
-                                        {{ listing.description }}
-                                    </div>
-                                    <div class="text-secondary">
-                                        <div class="subtext">
-                                            Created {{ listing.date }}
-                                        </div>
-                                    </div>
+
+    <h4>Active Listings</h4>
+    <div class="listingSpacing">
+        {% for listing in activeListings %}
+            <a class="listingLink" href="{% url 'listing' listing.id %}">
+                <div class="container-fluid border mb-3">
+                    <div class="row">
+                        <div class="col-4 p-2">
+                            {% if listing.image != "" %}
+                                <img class="img-fluid mx-auto d-block" src="{{ listing.image }}" alt="display image">
+                            {% endif %}
+                        </div>
+                        <div class="col-8 p-2">
+                            <div class="botMargin1">
+                                <h4>{{ listing.title }}</h4>
+                            </div>
+                            <div class="botMargin1">
+                                <b>Price:</b>
+                                {% if listing.bids.all.count != 0 %}
+                                    ${{ listing.bids.all.last.amount }}
+                                {% else %}
+                                    ${{ listing.startingBid }}
+                                {% endif %}
+                            </div>
+                            <div class="botMargin1">
+                                {{ listing.description }}
+                            </div>
+                            <div class="text-secondary">
+                                <div class="subtext">
+                                    Created {{ listing.date }}
                                 </div>
                             </div>
                         </div>
-                    </a> 
-                {% empty %}
-                    {{ username }} does not have any active listings.
-                {% endfor %}
-            </div>
-        </div>
-        <div>
-            <h4>Previous Listings</h4>
-            <div class="listingSpacing">
-                {% for listing in previousListings %}
-                    <a class="listingLink" href="{% url 'listing' listing.id %}">
-                        <div class="container-fluid border mb-3">
-                            <div class="row">
-                                <div class="col-4 p-2">
-                                    {% if listing.image != "" %}
-                                        <img class="img-fluid mx-auto d-block" src="{{ listing.image }}" alt="display image">
-                                    {% endif %}
-                                </div>
-                                <div class="col-8 p-2">
-                                    <div class="botMargin1">
-                                        <h4>{{ listing.title }}</h4>
-                                    </div>
-                                    <div class="botMargin1">
-                                        <b>Price:</b>
-                                        {% if listing.bids.all.count != 0 %}
-                                            ${{ listing.bids.all.last.amount }}
-                                        {% else %}
-                                            ${{ listing.startingBid }}
-                                        {% endif %}
-                                    </div>
-                                    <div class="botMargin1">
-                                        {{ listing.description }}
-                                    </div>
-                                    <div class="text-secondary">
-                                        <div class="subtext">
-                                            Created {{ listing.date }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                {% empty %}
-                    {{ username }} does not have any previous listings.
-                {% endfor %}
-            </div>
-        </div>
+                    </div>
+                </div>
+            </a> 
+        {% empty %}
+            {{ username }} does not have any active listings.
+        {% endfor %}
     </div>
+
+    <h4>Previous Listings</h4>
+    <div class="listingSpacing">
+        {% for listing in previousListings %}
+            <a class="listingLink" href="{% url 'listing' listing.id %}">
+                <div class="container-fluid border mb-3">
+                    <div class="row">
+                        <div class="col-4 p-2">
+                            {% if listing.image != "" %}
+                                <img class="img-fluid mx-auto d-block" src="{{ listing.image }}" alt="display image">
+                            {% endif %}
+                        </div>
+                        <div class="col-8 p-2">
+                            <div class="botMargin1">
+                                <h4>{{ listing.title }}</h4>
+                            </div>
+                            <div class="botMargin1">
+                                <b>Price:</b>
+                                {% if listing.bids.all.count != 0 %}
+                                    ${{ listing.bids.all.last.amount }}
+                                {% else %}
+                                    ${{ listing.startingBid }}
+                                {% endif %}
+                            </div>
+                            <div class="botMargin1">
+                                {{ listing.description }}
+                            </div>
+                            <div class="text-secondary">
+                                <div class="subtext">
+                                    Created {{ listing.date }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        {% empty %}
+            {{ username }} does not have any previous listings.
+        {% endfor %}
+    </div>
+
 {% endblock %}

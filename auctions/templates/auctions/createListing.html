@@ -1,6 +1,7 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
+
     <form action="{% url 'createListing' %}" method="POST">
         {% csrf_token %}
         {{ form.non_field_errors }}
@@ -31,4 +32,5 @@
         </div>
         <input class="btn btn-primary" type="submit" value="Submit">
     </form>
+
 {% endblock %}

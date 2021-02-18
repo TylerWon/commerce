@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block body %}
+
     {% if category %}
         <h2>Active Listings: {{ category }}</h2>
     {% else %}
@@ -46,4 +47,5 @@
             No active listings.
         {% endfor %}
     </div>  
+
 {% endblock %}
