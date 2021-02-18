@@ -31,3 +31,8 @@ body {
     text-decoration: none;
     color: black;
 }
+
+.winningMsg {
+    font-size: 20px;
+    font-weight: bold;
+}
