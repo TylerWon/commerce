@@ -2,7 +2,11 @@
 
 {% block body %}
 
-    <h2>User: {{ username }}</h2>
+    {% if username == user.username %} 
+        <h2>My Listings</h2>
+    {% else %}
+        <h2>User: {{ username }}</h2>
+    {% endif %}
 
     <h4>Active Listings</h4>
     <div class="listingSpacing">

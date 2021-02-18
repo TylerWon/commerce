@@ -91,7 +91,11 @@
     <div>
         <h4>Details</h4>
         <ul>
-            <li>Listed by: <a href="{% url 'user' listing.lister %}">{{ listing.lister }}</a></li>
+            {% if listing.lister != user %}
+                <li>Listed by: <a href="{% url 'userlistings' listing.lister %}">{{ listing.lister }}</a></li>
+            {% else %}
+                <li>Listed by: <a href="{% url 'mylistings' listing.lister %}">{{ listing.lister }}</a></li>
+            {% endif %}
             <li>Category: {{ listing.category }}</li>
         </ul>
     </div>

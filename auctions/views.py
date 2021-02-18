@@ -140,10 +140,10 @@ def listing(request, listingId):
     })
 
 # EFFECTS: render page that displays a user's listings
-def user(request, username):
+def userListings(request, username):
     user = User.objects.get(username=username)
 
-    return render(request, "auctions/user.html", {
+    return render(request, "auctions/userListings.html", {
         "username": user.username,
         "activeListings": user.listings.all().filter(active=True),
         "previousListings": user.listings.all().filter(active=False)
