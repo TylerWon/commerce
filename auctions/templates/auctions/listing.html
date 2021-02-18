@@ -37,9 +37,9 @@
         {% if listing.active %}
             <div class="mb-2">
                 {% if listing.bids.all.count != 0 %}
-                    <div class="price">${{ listing.bids.all.last.amount }}</div>
+                    <div class="price">Price: ${{ listing.bids.all.last.amount }}</div>
                 {% else %}
-                    <div class="price">${{ listing.startingBid }}</div>
+                    <div class="price">Price: ${{ listing.startingBid }}</div>
                 {% endif %}
             </div>
             {% if user.is_authenticated %}
