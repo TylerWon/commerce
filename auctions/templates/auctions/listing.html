@@ -14,20 +14,6 @@
         <h2 class="mb-2">Listing: {{ listing.title }} (closed)</h2>
     {% endif %}
 
-    {% if user.is_authenticated %}
-        {% if listing.lister != user %}
-            <form action="{% url 'alterWatchlist' user.username %}" method="POST">
-                {% csrf_token %}
-                    <input type="hidden" name="listingId" value="{{ listing.id }}">
-                {% if inWatchlist %}
-                    <input class="btn btn-outline-secondary btn-sm" type="submit" name="remove" value="Remove from watchlist"> 
-                {% else %}
-                    <input class="btn btn-outline-secondary btn-sm" type="submit" name="add" value="Add to watchlist">              
-                {% endif %}
-            </form>
-        {% endif %}
-    {% endif %}
-
     <div class="my-4">
         <img class="w-50 h-auto" src="{{ listing.image }}">
         <p>{{ listing.description }}</p>
@@ -99,5 +85,19 @@
             <li>Category: {{ listing.category }}</li>
         </ul>
     </div>
+
+    {% if user.is_authenticated %}
+        {% if listing.lister != user %}
+            <form action="{% url 'alterWatchlist' user.username %}" method="POST">
+                {% csrf_token %}
+                    <input type="hidden" name="listingId" value="{{ listing.id }}">
+                {% if inWatchlist %}
+                    <input class="btn btn-outline-secondary btn-sm" type="submit" name="remove" value="Remove from watchlist"> 
+                {% else %}
+                    <input class="btn btn-outline-secondary btn-sm" type="submit" name="add" value="Add to watchlist">              
+                {% endif %}
+            </form>
+        {% endif %}
+    {% endif %}
 
 {% endblock %}

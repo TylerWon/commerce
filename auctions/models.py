@@ -25,7 +25,7 @@ class Listing(models.Model):
     description = models.CharField(max_length=500, blank=True)
     image = models.URLField(max_length=5000)
     lister = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
-    interestedUsers = models.ManyToManyField(User, blank=True, related_name="watchlist")
+    interestedUsers = models.ManyToManyField(User, related_name="watchlist")
     winner = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name="purchases")
     date = models.DateTimeField(auto_now=True)
 
