@@ -45,7 +45,7 @@
                         <form action="{% url 'closelisting' listing.id %}" method=POST>
                             {% csrf_token %}
                             <div class="mt-1">
-                                <input class="btn btn-primary" type="submit" value="Close listing">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Close listing">
                             </div>                       
                         </form>
                     </div>
@@ -53,12 +53,12 @@
                     <div>            
                         <form action="{% url 'bid' listing.id %}" method=POST>
                             {% csrf_token %}
-                            {{ form.non_field_errors }}
+                            {{ bidform.non_field_errors }}
                             <div class="mb-3">
-                                {{ form.amount }}
-                                {{ form.amount.errors }} 
+                                {{ bidform.amount }}
+                                {{ bidform.amount.errors }} 
                             </div>
-                            <input class="btn btn-primary" type="submit" value="Place Bid">
+                            <input class="btn btn-primary btn-sm" type="submit" value="Place Bid">
                         </form>
                     </div>
                 {% endif %}
@@ -74,7 +74,7 @@
         {% endif %}
     </div>
 
-    <div>
+    <div class="mb-4">
         <h4>Details</h4>
         <ul>
             {% if listing.lister != user %}
@@ -84,20 +84,34 @@
             {% endif %}
             <li>Category: {{ listing.category }}</li>
         </ul>
+        {% if user.is_authenticated %}
+            {% if listing.lister != user %}
+                <form action="{% url 'alterWatchlist' user.username %}" method="POST">
+                    {% csrf_token %}
+                        <input type="hidden" name="listingId" value="{{ listing.id }}">
+                    {% if inWatchlist %}
+                        <input class="btn btn-secondary btn-sm" type="submit" name="remove" value="Remove from watchlist"> 
+                    {% else %}
+                        <input class="btn btn-secondary btn-sm" type="submit" name="add" value="Add to watchlist">              
+                    {% endif %}
+                </form>
+            {% endif %}
+        {% endif %}
     </div>
 
-    {% if user.is_authenticated %}
-        {% if listing.lister != user %}
-            <form action="{% url 'alterWatchlist' user.username %}" method="POST">
+    <div>
+        <h4>Comments</h4>
+        {% if user.is_authenticated %}
+            <form action="{% url 'comment' listing.id %}" method=POST>
                 {% csrf_token %}
-                    <input type="hidden" name="listingId" value="{{ listing.id }}">
-                {% if inWatchlist %}
-                    <input class="btn btn-outline-secondary btn-sm" type="submit" name="remove" value="Remove from watchlist"> 
-                {% else %}
-                    <input class="btn btn-outline-secondary btn-sm" type="submit" name="add" value="Add to watchlist">              
-                {% endif %}
+                {{ commentform.non_field_errors }}
+                <div class="mb-3">
+                    {{ commentform.content }}
+                    {{ commentform.content.errors }} 
+                </div>
+                <input class="btn btn-primary btn-sm" type="submit" value="Submit">
             </form>
         {% endif %}
-    {% endif %}
+    </div>
 
 {% endblock %}

@@ -13,6 +13,7 @@ urlpatterns = [
     path("listings/<int:listingId>", views.listing, name="listing"),
     path("listings/<int:listingId>/bid", views.bid, name="bid"),
     path("listings/<int:listingId>/closelisting", views.closeListing, name="closelisting"),
+    path("listings/<int:listingId>/comment", views.comment, name="comment"),
     path("users/<str:username>/listings", views.userListings, name="userlistings"),
     path("users/<str:username>/mylistings", views.userListings, name="mylistings"),
     path("users/<str:username>/watchlist", views.watchlist, name="watchlist"),

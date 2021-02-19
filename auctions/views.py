@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from .models import User, Category, Bid, Listing, Comment
-from .forms import CreateListingForm, BidForm
+from .forms import CreateListingForm, BidForm, CommentForm
 
 # EFFECTS: render page that displays all of the currently active auction listings
 def index(request):
@@ -121,22 +121,11 @@ def category(request, category):
 
 # EFFECTS: render page that displays the details of the listing that has id = id
 def listing(request, listingId):
-    user = request.user
-
-    # determine if listing is in the user's watchlist
-    if user.is_authenticated:
-        try:
-            user.watchlist.all().get(id=listingId)
-            inWatchlist = True
-        except:
-            inWatchlist = False
-    else:
-        inWatchlist = False
-        
     return render(request, "auctions/listing.html", {
         "listing": Listing.objects.get(id=listingId),
-        "form": BidForm(),
-        "inWatchlist": inWatchlist
+        "bidform": BidForm(),
+        "inWatchlist": inWatchlist(request, listingId),
+        "commentform": CommentForm()
     })
 
 # EFFECTS: render page that displays a user's listings
@@ -150,7 +139,7 @@ def userListings(request, username):
     })
 
 # EFFECTS: if request is POST, load data into BidForm
-#               1. if form is valid, create a new Bid, add it the the database, and redirect to listing bid was made on
+#               1. if form is valid, create a new Bid, add it to the database, and redirect to listing bid was made on
 #               2. otherwise, reload the same page and notify user that form data was invalid
 @login_required
 def bid(request, listingId):
@@ -220,3 +209,42 @@ def closeListing(request, listingId):
     listing.save()
     messages.info(request, msg)
     return HttpResponseRedirect(reverse("listing", args=[listingId]))
+
+# EFFECTS: if request is POST, load data into CommentForm
+#               1. if form is valid, create a new comment, add it to the database, and display notification that comment was added
+#               2. otherwise, reload the same page and notify the user that form data was invalid                 
+@login_required
+def comment(request, listingId):
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        listing = Listing.objects.get(id=listingId)
+
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.commenter = request.user
+            comment.listing = listing
+            comment.save()
+
+            messages.info(request, "Added comment")
+            
+            return HttpResponseRedirect(reverse("listing", args=[listingId]))
+        else:
+            return render(request, "auctions/listing.html", {
+                "listing": listing,
+                "bidform": BidForm(),
+                "inWatchlist": inWatchlist(request, listingId),
+                "commentform": form
+            })
+
+# EFFECTS: determines if listing with listingId is in the user's watchlist
+def inWatchlist(request, listingId):
+    user = request.user
+
+    if user.is_authenticated:
+        try:
+            user.watchlist.all().get(id=listingId)
+            return True
+        except:
+            return False
+    else:
+        return False
