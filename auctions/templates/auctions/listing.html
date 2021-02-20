@@ -3,9 +3,7 @@
 {% block body %}
 
     {% for message in messages %}
-    <div class="alert alert-success" role="alert">
-        {{ message }}
-    </div>
+        <div class="alert alert-success" role="alert">{{ message }}</div>
     {% endfor %}
 
     {% if listing.active %}
@@ -14,9 +12,10 @@
         <h2 class="mb-2">Listing: {{ listing.title }} (closed)</h2>
     {% endif %}
 
+    <img class="w-50 h-auto" src="{{ listing.image }}">
+
     <div class="my-4">
-        <img class="w-50 h-auto" src="{{ listing.image }}">
-        <p>{{ listing.description }}</p>
+        <strong>Description:</strong><p>{{ listing.description }}</p>
     </div>
 
     <div class="mb-4">
