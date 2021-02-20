@@ -118,11 +118,9 @@
         {% endif %}
         <div class="container-fluid border p-2">
             {% for comment in listing.comments.all %}
-                <div class="mb-2">
+                <div class="container-fluid border my-2">
                     <strong>{{ comment.commenter.username }}</strong> | {{ comment.date }}
-                    <div class="container-fluid border p-2">
-                            {{ comment.content }}
-                    </div>  
+                    <div class="py-2 mb-2">{{ comment.content }}</div>  
                 </div>
             {% empty %} 
                 No comments.
