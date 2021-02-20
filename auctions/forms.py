@@ -13,7 +13,7 @@ class CreateListingForm(ModelForm):
         model = Listing
         exclude = ["active", "lister", "interestedUsers", "winner", "date"]
         widgets = {
-            "description": Textarea(attrs={
+            "description": forms.Textarea(attrs={
                 "class": "form-control col-lg-6 col-md-4"
             })
         }
@@ -28,8 +28,13 @@ class BidForm(ModelForm):
 
 # Represents a form which the user can use to comment on a listing
 class CommentForm(ModelForm):
-    content = forms.CharField(initial="Add a public comment...")
+    #content = forms.CharField(initial="Add a public comment...")
 
     class Meta:
         model = Comment
         exclude = ["date, commenter, listing"]
+        widgets = {
+            "content": forms.TextInput(attrs={
+                "placeholder": "Add a public comment..."
+            })
+        }

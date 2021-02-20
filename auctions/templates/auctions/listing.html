@@ -90,9 +90,15 @@
                     {% csrf_token %}
                         <input type="hidden" name="listingId" value="{{ listing.id }}">
                     {% if inWatchlist %}
-                        <input class="btn btn-primary btn-sm" type="submit" name="remove" value="Remove from watchlist"> 
+                        <div class="form-check">
+                            <input onChange="this.form.submit()" class="form-check-input" type="checkbox" id="flexCheckChecked" checked name="remove">
+                            <label class="form-check-label" for="flexCheckChecked">Watchlist</label>
+                        </div>
                     {% else %}
-                        <input class="btn btn-primary btn-sm" type="submit" name="add" value="Add to watchlist">              
+                        <div class="form-check">
+                            <input onChange="this.form.submit()" class="form-check-input" type="checkbox" id="flexCheckDefault" name="add">
+                            <label class="form-check-label" for="flexCheckDefault">Watchlist</label>
+                        </div>
                     {% endif %}
                 </form>
             {% endif %}
@@ -102,16 +108,26 @@
     <div>
         <h4>Comments</h4>
         {% if user.is_authenticated %}
-            <form action="{% url 'comment' listing.id %}" method="POST">
+            <form class="mb-2" action="{% url 'comment' listing.id %}" method="POST">
                 {% csrf_token %}
                 {{ commentform.non_field_errors }}
-                <div class="mb-3">
-                    {{ commentform.content }}
-                    {{ commentform.content.errors }} 
-                </div>
-                <input class="btn btn-primary btn-sm" type="submit" value="Submit">
+                {{ commentform.content }}
+                {{ commentform.content.errors }} 
+                <input class="btn btn-primary btn-sm" type="submit" value="Submit">    
             </form>
         {% endif %}
+        <div class="container-fluid border p-2">
+            {% for comment in listing.comments.all %}
+                <div class="mb-2">
+                    <strong>{{ comment.commenter.username }}</strong> | {{ comment.date }}
+                    <div class="container-fluid border p-2">
+                            {{ comment.content }}
+                    </div>  
+                </div>
+            {% empty %} 
+                No comments.
+            {% endfor %}
+        </div>
     </div>
 
 {% endblock %}
