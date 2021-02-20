@@ -90,9 +90,9 @@
                     {% csrf_token %}
                         <input type="hidden" name="listingId" value="{{ listing.id }}">
                     {% if inWatchlist %}
-                        <input class="btn btn-secondary btn-sm" type="submit" name="remove" value="Remove from watchlist"> 
+                        <input class="btn btn-primary btn-sm" type="submit" name="remove" value="Remove from watchlist"> 
                     {% else %}
-                        <input class="btn btn-secondary btn-sm" type="submit" name="add" value="Add to watchlist">              
+                        <input class="btn btn-primary btn-sm" type="submit" name="add" value="Add to watchlist">              
                     {% endif %}
                 </form>
             {% endif %}
@@ -102,7 +102,7 @@
     <div>
         <h4>Comments</h4>
         {% if user.is_authenticated %}
-            <form action="{% url 'comment' listing.id %}" method=POST>
+            <form action="{% url 'comment' listing.id %}" method="POST">
                 {% csrf_token %}
                 {{ commentform.non_field_errors }}
                 <div class="mb-3">

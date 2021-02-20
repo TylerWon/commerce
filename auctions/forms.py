@@ -33,8 +33,3 @@ class CommentForm(ModelForm):
     class Meta:
         model = Comment
         exclude = ["date, commenter, listing"]
-        widgets = {
-            "content": Textarea(attrs={
-                "class": "form-control col-lg-6 col-md-4" # might have to make textarea smaller
-            })
-        }

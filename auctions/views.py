@@ -218,7 +218,7 @@ def comment(request, listingId):
     if request.method == "POST":
         form = CommentForm(request.POST)
         listing = Listing.objects.get(id=listingId)
-
+        
         if form.is_valid():
             comment = form.save(commit=False)
             comment.commenter = request.user
@@ -227,7 +227,7 @@ def comment(request, listingId):
 
             messages.info(request, "Added comment")
             
-            return HttpResponseRedirect(reverse("listing", args=[listingId]))
+            return HttpResponseRedirect(reverse("listing", args=[listingId]))            
         else:
             return render(request, "auctions/listing.html", {
                 "listing": listing,

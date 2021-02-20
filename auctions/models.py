@@ -24,9 +24,9 @@ class Listing(models.Model):
     startingBid = models.DecimalField(max_digits=19, decimal_places=2, validators=[MinValueValidator(limit_value=0)])
     description = models.CharField(max_length=500, blank=True)
     image = models.URLField(max_length=5000)
-    lister = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
-    interestedUsers = models.ManyToManyField(User, related_name="watchlist")
-    winner = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name="purchases")
+    lister = models.ForeignKey(User, blank=True, on_delete=models.CASCADE, related_name="listings")
+    interestedUsers = models.ManyToManyField(User, blank=True, related_name="watchlist")
+    winner = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name="purchases")
     date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -45,8 +45,8 @@ class Bid(models.Model):
 class Comment(models.Model):
     content = models.CharField(max_length=500)
     date = models.DateTimeField(auto_now=True)
-    commenter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments")
+    commenter = models.ForeignKey(User, blank=True, on_delete=models.CASCADE, related_name="comments")
+    listing = models.ForeignKey(Listing, blank=True, on_delete=models.CASCADE, related_name="comments")
 
     def __str__(self):
         return f"{self.commenter} at {self.date} on the listing {self.listing.title}"
