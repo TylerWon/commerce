@@ -236,6 +236,19 @@ def comment(request, listingId):
                 "commentform": form
             })
 
+# EFFECTS: if method is POST:
+#               - remove comment from listing with id = listingId
+#               - notify user that comment was removed
+@login_required
+def deletecomment(request, listingId):
+    if request.method == "POST":
+        commentId = int(request.POST["commentId"])
+
+        Comment.objects.get(id=commentId).delete()
+
+        messages.info(request, "Removed comment.")
+        return HttpResponseRedirect(reverse("listing", args=[listingId]))
+
 # EFFECTS: determines if listing with listingId is in the user's watchlist
 def inWatchlist(request, listingId):
     user = request.user

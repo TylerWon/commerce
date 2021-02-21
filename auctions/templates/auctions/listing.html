@@ -119,7 +119,16 @@
             {% for comment in listing.comments.all %}
                 <div class="container-fluid border my-2">
                     <strong>{{ comment.commenter.username }}</strong> | {{ comment.date }}
-                    <div class="py-2 mb-2">{{ comment.content }}</div>  
+                    <div class="py-2 mb-2">
+                        {{ comment.content }}
+                        {% if request.user == comment.commenter %}
+                            <form class="alignright" action="{% url 'deletecomment' listing.id%}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="commentId" value="{{ comment.id }}">
+                                <input class="btn btn-link" type="submit" value="delete">
+                            </form>
+                        {% endif %}
+                    </div>  
                 </div>
             {% empty %} 
                 No comments.
