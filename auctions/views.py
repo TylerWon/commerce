@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from .models import User, Category, Bid, Listing, Comment
-from .forms import CreateListingForm, BidForm, CommentForm
+from .forms import CreateListingForm, CommentForm
 
 # EFFECTS: render page that displays all of the currently active auction listings
 def index(request):
@@ -123,7 +123,6 @@ def category(request, category):
 def listing(request, listingId):
     return render(request, "auctions/listing.html", {
         "listing": Listing.objects.get(id=listingId),
-        "bidform": BidForm(),
         "inWatchlist": inWatchlist(request, listingId),
         "commentform": CommentForm()
     })
@@ -138,26 +137,29 @@ def userListings(request, username):
         "previousListings": user.listings.all().filter(active=False)
     })
 
-# EFFECTS: if request is POST, load data into BidForm
-#               1. if form is valid, create a new Bid, add it to the database, and redirect to listing bid was made on
-#               2. otherwise, reload the same page and notify user that form data was invalid
+# EFFECTS: if request is POST check if bid > starting bid (if no bids placed) or last bid placed
+#               1. if bid > starting or last bid palced, add bid to the database, and redirect to listing bid was made on
+#               2. otherwise, reload the same page and notify user that the bid was invalid
 @login_required
 def bid(request, listingId):
     if request.method == "POST":
-        form = BidForm(request.POST)
-
-        if form.is_valid():
-            bid = form.save(commit=False)
-            bid.bidder = request.user
-            bid.listing = Listing.objects.get(id=listingId)
-            bid.save()
-
+        try:
+            amount = Decimal(request.POST["amount"])
+            listing = Listing.objects.get(id=listingId)
+        except:
+            messages.error(request, "Invalid amount. Try again.")
             return HttpResponseRedirect(reverse("listing", args=[listingId]))
-        else:
-            return render(request, "auctions/listing.html", {
-                "listing": Listing.objects.get(id=listingId),
-                "form": form
-            })
+
+        if listing.bids.all().count() == 0:
+            if amount > listing.startingBid:
+                addBid(amount, request, listing)
+                return HttpResponseRedirect(reverse("listing", args=[listingId]))
+        elif amount > listing.bids.all().last().amount:
+            addBid(amount, request, listing)
+            return HttpResponseRedirect(reverse("listing", args=[listingId]))
+        
+        messages.error(request, "Bid is lower than the current price.")
+        return HttpResponseRedirect(reverse("listing", args=[listingId]))
 
 # EFFECTS: render page that displays the items in the user's watchlist
 @login_required
@@ -194,9 +196,7 @@ def alterWatchlist(request, username):
 @login_required
 def closeListing(request, listingId):
     listing = Listing.objects.get(id=listingId)
-    listing.active = False # might need to save?
-
-    print(listing.active)
+    listing.active = False
 
     if listing.bids.all().count() == 0:
         msg = f"Listing: '{ listing.title }' was closed."
@@ -231,7 +231,6 @@ def comment(request, listingId):
         else:
             return render(request, "auctions/listing.html", {
                 "listing": listing,
-                "bidform": BidForm(),
                 "inWatchlist": inWatchlist(request, listingId),
                 "commentform": form
             })
@@ -261,3 +260,8 @@ def inWatchlist(request, listingId):
             return False
     else:
         return False
+
+# EFFECTS: creates a new Bid and adds it to the database
+def addBid(amount, request, listing):
+    bid = Bid(amount=amount, bidder=request.user, listing=listing)
+    bid.save()

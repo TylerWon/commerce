@@ -3,7 +3,11 @@
 {% block body %}
 
     {% for message in messages %}
-        <div class="alert alert-success" role="alert">{{ message }}</div>
+        {% if message.tags == "error" %}
+            <div class="alert alert-danger" role="alert">{{ message }}</div>
+        {% else %}
+            <div class="alert alert-success" role="alert">{{ message }}</div>
+        {% endif %}
     {% endfor %}
 
     {% if listing.active %}
@@ -52,10 +56,8 @@
                     <div>            
                         <form action="{% url 'bid' listing.id %}" method=POST>
                             {% csrf_token %}
-                            {{ bidform.non_field_errors }}
                             <div class="mb-3">
-                                {{ bidform.amount }}
-                                {{ bidform.amount.errors }} 
+                                <input type="text" placeholder="00.00" name="amount">
                             </div>
                             <input class="btn btn-primary btn-sm" type="submit" value="Place Bid">
                         </form>
