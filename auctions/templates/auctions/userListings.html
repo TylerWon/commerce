@@ -44,7 +44,11 @@
                 </div>
             </a> 
         {% empty %}
-            {{ username }} does not have any active listings.
+            {% if username == user.username %}
+                You do not have any active listings.
+            {% else %}
+                {{ username }} does not have any active listings.
+            {% endif %}
         {% endfor %}
     </div>
 
@@ -84,7 +88,11 @@
                 </div>
             </a>
         {% empty %}
-            {{ username }} does not have any previous listings.
+            {% if username == user.username %}
+                You do not have any previous listings.
+            {% else %}
+                {{ username }} does not have any previous listings.
+            {% endif %}
         {% endfor %}
     </div>
 
